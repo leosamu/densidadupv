@@ -63,7 +63,7 @@ label:nth-child(2) > div > span{
         </style>
         <div id="mapid"></div>
         <input type="range" min="1" max="100" value="1" class="slider" id="miFiltro">
-        <span id="personascelda">Personas por celda:1</span>
+        <span id="personascelda">Personas por celda > 1</span>
     <script>        
         function refine_interval(interval, cd, mask) {
         if (cd & mask) {
@@ -193,7 +193,7 @@ label:nth-child(2) > div > span{
         // Update the current slider value (each time you drag the slider handle)
         slider.oninput = function() {        
         var hidden = L.latLng(1000,1000);
-        $("#personascelda")[0].innerText="Personas por celda : " + this.value
+        $("#personascelda")[0].innerText="Personas por celda > " + this.value;
         //mymap.removeLayer(pisos[0]._layers[41])
         for (key in mymap._layers){
             console.log(key)
