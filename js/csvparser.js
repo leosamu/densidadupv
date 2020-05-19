@@ -94,15 +94,29 @@ function loadMap(lines){
             layerControl = L.control.layers().addTo(mymap);
         }
         
+        maxindices=[];//maximo de 5 elementos
         
 
         for (key in lines){            
             geohash = lines[key][1].split(":")[1].slice(1,-1);
             planta = lines[key][2].split(":")[1].slice(1,-1);            
             numUsuarios = lines[key][3].split(":")[1];            
-            //poner un color por planta rainbow(1+30 por planta)            
-                
-            console.log('as');
+            if (maxindices.length<5){
+                maxindices.push({'key':key,'numUsuarios':parseInt(numUsuarios)});
+            }                
+            else{                
+                for (item in maxindices)
+                {
+                    console.log('aqui');
+                    if (maxindices[item]['numUsuarios']<parseInt(numUsuarios)){
+                        maxindices.splice(item,1)
+                        maxindices.push({'key':key,'numUsuarios':parseInt(numUsuarios)});
+                        break;
+                    }
+
+                }
+            }                        
+            
             if (planta in pisos)
             {
                 //si ya tenemos la planta agregamos el nodo
@@ -118,16 +132,34 @@ function loadMap(lines){
                     'color':color,
                     'fillcolor':fillColor,
                     'nodos':[setNode(geohash,numUsuarios,color,fillColor)]
-                 }                 
+                 }     
+                 var style = document.createElement('style');
+                style.innerHTML = `
+                label:nth-child(` + Object.keys(pisos).length.toString() + `) > div > span{
+                    color:`+ color +`;
+                }
+                `;
+                document.head.appendChild(style);             
             }
-        }        
+        }       
+        
+        for (key in maxindices)
+        {   
+            console.log("esat");         
+            $('#top5 tr:last').after(`<tr>
+                                        <td>`+lines[maxindices[key]["key"]][1].split(":")[1]+`</td>
+                                        <td>`+lines[maxindices[key]["key"]][2].split(":")[1]+`</td>
+                                        <td>`+lines[maxindices[key]["key"]][3].split(":")[1]+`</td>
+                                        <td>`+lines[maxindices[key]["key"]][4].split(":")[1]+`</td>
+                                        <td>`+lines[maxindices[key]["key"]][5].split(":")[1]+`</td>                                        
+                                    </tr>`);
+        }
 
         for (key in pisos)
         {
             layerControl.addOverlay(L.layerGroup(pisos[key]['nodos']), "Planta " + key);
         }        
-
-        //agregamos las capas
+        layerControl.expand();
         for (key in pisos)
         {
             mymap.addLayer(L.layerGroup(pisos[key]['nodos']));
