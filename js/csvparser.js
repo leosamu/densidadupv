@@ -106,8 +106,7 @@ function loadMap(lines){
             }                
             else{                
                 for (item in maxindices)
-                {
-                    console.log('aqui');
+                {                    
                     if (maxindices[item]['numUsuarios']<parseInt(numUsuarios)){
                         maxindices.splice(item,1)
                         maxindices.push({'key':key,'numUsuarios':parseInt(numUsuarios)});
