@@ -48,23 +48,45 @@
   background: #4CAF50;
   cursor: pointer;
 }
-
-label:nth-child(1) > div > span{
-    color:red;
-}
-
-label:nth-child(2) > div > span{
-    color:blue;
-}
     </style>
     <body>
         
         <h2>Zonas con excesiva densidad de personas</h2>
         <style>
             #mapid { height: 600px; }
+            table {
+            width:100%;
+            }
+            table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            }
+            th, td {
+            padding: 15px;
+            text-align: left;
+            }
+            table tr:nth-child(even) {
+            background-color: #eee;
+            }
+            table tr:nth-child(odd) {
+            background-color: #fff;
+            }
+            table th {
+            background-color: black;
+            color: white;
+            }
         </style>
         <div id="mapid"></div>
         <input type="range" min="1" max="100" value="1" class="slider" id="miFiltro">
         <span id="personascelda">Personas por celda de 100 metros cuadrados > 1</span>
+        <table style="width:100%" id="top5">
+            <tr>
+              <th>Geohash</th>
+              <th>Planta</th>
+              <th>Usuarios</th>
+              <th>Latitud</th>
+              <th>Longitud</th>
+            </tr>              
+          </table>
     </body>
 </html>
