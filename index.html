@@ -12,70 +12,13 @@
   integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
   crossorigin="anonymous"></script>
   <script src="./js/csvparser.js?id=adsfad"></script>
+  <link rel="stylesheet" href="./css/styles.css">
     </head>
-    <style>
-        .slidecontainer {
-  width: 100%;
-}
-
-.slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 25px;
-  background: #d3d3d3;
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-}
-
-.slider:hover {
-  opacity: 1;
-}
-
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  background: #4CAF50;
-  cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-  width: 25px;
-  height: 25px;
-  background: #4CAF50;
-  cursor: pointer;
-}
-    </style>
-    <body>
-        
-        <h2>Zonas con excesiva densidad de personas</h2>
-        <style>
-            #mapid { height: 600px; }
-            table {
-            width:100%;
-            }
-            table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            }
-            th, td {
-            padding: 15px;
-            text-align: left;
-            }
-            table tr:nth-child(even) {
-            background-color: #eee;
-            }
-            table tr:nth-child(odd) {
-            background-color: #fff;
-            }
-            table th {
-            background-color: black;
-            color: white;
-            }
-        </style>
+    <body>        
+        <h2>Zonas con excesiva densidad de personas</h2> 
+        <a href="#" class="float">
+          <i class="fa fa-plus my-float"></i>
+        </a>      
         <div id="mapid"></div>
         <input type="range" min="1" max="100" value="1" class="slider" id="miFiltro">
         <span id="personascelda">Personas por celda de 100 metros cuadrados > 1</span>
