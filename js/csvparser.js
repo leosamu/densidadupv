@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $.ajax({
         type: "GET",
-        url: "./assets/out.csv",
+        url: "http://corcaroli.upv.es/Fase1Wifi/out.200520.1015.csv",
         dataType: "text",
         success: function(data) {processData(data);}
      });
