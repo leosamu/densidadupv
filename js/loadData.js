@@ -1,12 +1,15 @@
 $(document).ready(function() {
   // si tengo parametro hora
   if (typeof hora === 'undefined') 
-  //TO-DO:cargar hora actual
-    loadMap(datos,"08:05");    
+  {   
+    var coeff = 1000 * 60 * 5;
+    var date = new Date();  //or use any other date
+    hora = new Date(Math.round(date.getTime() / coeff) * coeff).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+    loadMap(datos,hora);    
+  }  
   else
-    loadMap(datos,hora);
-  //TO-DO:poner el slider a la hora
-
+    loadMap(datos,hora);  
+  crearSlider(mymap);
 });
 
 function refine_interval(interval, cd, mask) {
@@ -59,9 +62,29 @@ function loadMap(datos,hora){
         {
             //inicializamos el mapa
             //si tengo parametro edificio centrar el mapa en el edificio
-            //sino si tengo parametro campus centrar mapa en el campus A,G,V
+            if (typeof edificio != 'undefined'){
+                mymap = L.map('mapid').setView(decodeGeoHash(edificio["geohash"]), 20);     
+            }
+            else{
+                //sino si tengo parametro campus centrar mapa en el campus A,G,V
+                if (typeof campus != 'undefined'){
+                    if (campus =="A"){
+                        mymap = L.map('mapid').setView([38.6944387,-0.4782071], 16);     
+                    }else if (campus =="G"){
+                        mymap = L.map('mapid').setView([ 38.9962585,-0.166243], 16);     
+                    }else{
+                        mymap = L.map('mapid').setView([39.48095740818392, -0.34156325567905377], 16);             
+                    }
+                }else{
+                    mymap = L.map('mapid').setView([39.48095740818392, -0.34156325567905377], 16);             
+                }
+
+            }
+            
+            //gandia 38.9962585,-0.166243,19z
+            //alcoi 38.6944387,-0.4782071,893m
             //sino centrar el mapa en valencia
-            mymap = L.map('mapid').setView([39.48095740818392, -0.34156325567905377], 16);     
+            
             //mymap = L.map('mapid').setView([39.48095740818392, -22.55156325567905377], 16);     
         }
         else{
@@ -71,11 +94,13 @@ function loadMap(datos,hora){
                   mymap.removeLayer(layer);
                 }
               });
-            layerControl.remove()    
+            //quitamos el control del layer y dejamos leyenda fija lo dejo comentado por si acaso
+            //layerControl.remove()    
         }
         
         //inicializamos el mapa
-        layerControl = false;
+        //quitamos el control del layer y dejamos leyenda fija lo dejo comentado por si acaso
+        //layerControl = false;
         //para que se vea la upv
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -85,30 +110,40 @@ function loadMap(datos,hora){
                 zoomOffset: -1,
                 accessToken: 'sk.eyJ1IjoibGVvc2FtdSIsImEiOiJja2FjaW0weG0xZ3p6MnJwNHVvZmJ4eGs2In0.KYPRWmmdD_0gxO9dnGVY_A'
             }).addTo(mymap);
-        console.log("cargardatos");
-
-        datoshora = datos[hora];
-        console.log(pintar);
         
-        if(layerControl === false) {
-            layerControl = L.control.layers().addTo(mymap);
+        
+        datoshora = datos[hora];
+        if  (typeof datoshora != 'undefined') 
+        {
+            $($(".alerta")[0]).css("display","none");
         }
-        // necesito un layer para cada key en datoshora -> un layer por densidad
-        //vamos a tener 2 franjas actualmente si se decide cambiar para que sea variable
-        //las cargaremos abajo y pintar pasara a ser = {} en esta declaración
-        var pintar = {"d80":{"color":"yellow","fillcolor":"yellow","nodos":[]},
-                      "d100":{"color":"red","fillcolor":"red","nodos":[]}    
-                     }
+        else{
+            $($(".alerta")[0]).css("display","block");
+        }
 
-        //preparamos los layers en pintar
+        if  (typeof mymap === 'undefined') 
+        {
+
+        }
+        else{
+            //quitamos el control del layer y dejamos leyenda fija lo dejo comentado por si acaso
+            //if(layerControl === false) {
+            //    layerControl = L.control.layers().addTo(mymap);
+            //}
+            // necesito un layer para cada key en datoshora -> un layer por densidad
+            //vamos a tener 2 franjas actualmente si se decide cambiar para que sea variable
+            //las cargaremos abajo y pintar pasara a ser = {} en esta declaración
+            var pintar = {"d80":{"color":"yellow","fillcolor":"yellow","nodos":[]},
+                          "d100":{"color":"red","fillcolor":"red","nodos":[]}    
+                         }
+            //preparamos los layers en pintar
         for (key in datoshora){
             if (key in pintar)
             {
             for (datonodo in datoshora[key])
             {
                 //si ya tenemos la planta agregamos el nodo
-                //key es el % de ocupacion 
-                console.log("aqui");                
+                //key es el % de ocupacion                            
                 nodo = setNode(datoshora[key][datonodo]["geohash"],datoshora[key][datonodo]["planta"],parseInt(key.replace("d","")),pintar[key]['color'],pintar[key]['fillcolor']);
                 pintar[key]['nodos'].push(nodo);
             }             
@@ -136,100 +171,18 @@ function loadMap(datos,hora){
             }             
         }
 
-        
-        for (key in pintar)
-        {
-            layerControl.addOverlay(L.layerGroup(pintar[key]['nodos']), "Densidad: " + key + "%");
-        }        
-        layerControl.expand();
-        $(".leaflet-control-layers-overlays label input").trigger('click');
+        //quitamos el control del layer y dejamos leyenda fija lo dejo comentado por si acaso
+        //for (key in pintar)
+        //{
+        //    layerControl.addOverlay(L.layerGroup(pintar[key]['nodos']), "Densidad: " + key + "%");
+        //}        
+        //layerControl.expand();
+        //$(".leaflet-control-layers-overlays label input").trigger('click');
         for (key in pintar)
         {
             mymap.addLayer(L.layerGroup(pintar[key]['nodos']));
         }
-
-
-        /*
-        nodo = setNode(geohash,numUsuarios,pisos[planta]['color'],pisos[planta]['fillcolor']);
-                pisos[planta]['nodos'].push(nodo);
-        */
-
-
-        
-
-        /*for (key in pintar)
-        {
-            layerControl.addOverlay(L.layerGroup(pisos[key]['nodos']), "Planta " + key);
-        }        
-        layerControl.expand();
-        for (key in pisos)
-        {
-            mymap.addLayer(L.layerGroup(pisos[key]['nodos']));
-        }*/
-
-        //esto hay que cambiarlo entero
-        /*
-        var pisos = {};        
-        if(layerControl === false) {
-            layerControl = L.control.layers().addTo(mymap);
-        }
-        
-        maxindices=[];//maximo de 5 elementos
-        
-
-        for (key in lines){            
-            geohash = lines[key][1].split(":")[1].slice(1,-1);
-            planta = lines[key][2].split(":")[1].slice(1,-1);            
-            numUsuarios = lines[key][3].split(":")[1];            
-                                  
-            
-            if (planta in pisos)
-            {
-                //si ya tenemos la planta agregamos el nodo
-                nodo = setNode(geohash,numUsuarios,pisos[planta]['color'],pisos[planta]['fillcolor']);
-                pisos[planta]['nodos'].push(nodo);
-            }
-            else{
-                //sino creamos la planta                
-                var color = rainbow(Object.keys(pisos).length*30);
-                var fillColor = rainbow(Object.keys(pisos).length*30);                
-                pisos[planta] = {
-                    'color':color,
-                    'fillcolor':fillColor,
-                    'nodos':[setNode(geohash,numUsuarios,color,fillColor)]
-                 }     
-                 var style = document.createElement('style');
-                style.innerHTML = `
-                label:nth-child(` + Object.keys(pisos).length.toString() + `) > div > span{
-                    color:`+ color +`;
-                }
-                `;
-                document.head.appendChild(style);             
-            }
-        }       
-        
-        for (key in maxindices)
-        {   
-            console.log("esat");         
-            $('#top5 tr:last').after(`<tr>
-                                        <td>`+lines[maxindices[key]["key"]][1].split(":")[1]+`</td>
-                                        <td>`+lines[maxindices[key]["key"]][2].split(":")[1]+`</td>
-                                        <td>`+lines[maxindices[key]["key"]][3].split(":")[1]+`</td>
-                                        <td>`+lines[maxindices[key]["key"]][4].split(":")[1]+`</td>
-                                        <td>`+lines[maxindices[key]["key"]][5].split(":")[1]+`</td>                                        
-                                    </tr>`);
-        }
-
-        for (key in pisos)
-        {
-            layerControl.addOverlay(L.layerGroup(pisos[key]['nodos']), "Planta " + key);
-        }        
-        layerControl.expand();
-        for (key in pisos)
-        {
-            mymap.addLayer(L.layerGroup(pisos[key]['nodos']));
-        }*/                 
-        crearSlider(mymap);
+        }                        
 }
 
 function setNode(geohash,planta,size,color,fillcolor){
@@ -242,20 +195,21 @@ function setNode(geohash,planta,size,color,fillcolor){
 }
    
 function crearSlider(mymap){
-    var slider = document.getElementById("miFiltro");
-    //TO-DO: SI HAY PARAMETRO HORA POSICIONAR EL SLIDER EN ESA HORA
-    
+    var slider = document.getElementById("miFiltro");        
+    if  (typeof hora != 'undefined') 
+        {   
+            slider.value = parseInt(hora.split(":")[0])*12+Math.round(parseInt(hora.split(":")[1])/5)
+            $("#personascelda")[0].innerText="Personas por celda de 100 metros cuadrados a las " + hora;
+        }
     // Update the current slider value (each time you drag the slider handle)
     slider.oninput = function() {    
     var horas = Math.floor(this.value/12)
     var minutos = Math.floor(this.value%12*5)
     var momento = new Date();
     momento.setHours(horas);
-    momento.setMinutes(minutos);
-    console.log(momento);
-    console.log(this.value);
+    momento.setMinutes(minutos);    
     //el slider da valores numéricos de 1 a 288 que son los rangos de 5 en 5 minutos
-    $("#personascelda")[0].innerText="Personas por celda de 100 metros cuadrados a las : " + momento.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    $("#personascelda")[0].innerText="Personas por celda de 100 metros cuadrados a las " + momento.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     loadMap(datos,momento.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
     /*
     var hidden = L.latLng(1000,1000);
