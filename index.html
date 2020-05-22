@@ -13,9 +13,9 @@
   crossorigin="anonymous"></script>  
   <!-- aqui va lo de piolin-->
   <script>
-  campus="V";
-  edificio={"nombre":"V-2B","posicion":"ezpb85k90"};
-  hora="08:20";
+  //campus="V";
+  //edificio={"nombre":"V-2B","geohash":"ezpb85k90"};
+  //hora="08:20";
   datos = {"08:05":{
 "d100":[
 {"geohash":"ezpb85k90","edificio":"V-2B","planta":"2"}
@@ -2814,15 +2814,46 @@
         <h2>Zonas con excesiva densidad de personas</h2>         
         <div id="mapid"></div>
         <input type="range" min="0" max="288" value="1" class="slider" id="miFiltro">
-        <span id="personascelda">Personas por celda de 100 metros cuadrados a las:</span>
-        <table style="width:100%" id="top5">
-            <tr>
-              <th>Geohash</th>
-              <th>Planta</th>
-              <th>Usuarios</th>
-              <th>Latitud</th>
-              <th>Longitud</th>
-            </tr>              
-          </table>
+        <span id="personascelda">Personas por celda de 100 metros cuadrados a las </span>
+        <div class="alerta" style="
+    color: aliceblue;
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    background: #3c91408f;
+    padding: 20px;
+    width: 200px;
+    height: 30;
+    position: absolute;
+    top: 120;
+    left: 50%;
+    display: none;
+    z-index:9999;
+">
+          NO HAY DATOS EN ESTA HORA
+        </div>   
+        <div class="leyenda" style="
+        color: aliceblue;
+        border-radius: 25px;
+        border: 2px solid #73AD21;
+        background: #3c91408f;
+        padding: 20px;
+        width: 176px;
+        height: 42px;
+        position: absolute;
+        top: 71px;
+        right: 30;
+        display: block;
+        z-index:9999;
+        "><div style="
+    width: 20px;
+    height: 20px;
+    background: yellow;
+    display: inline-block;
+"></div>80% de ocupación<br><div style="
+    width: 20px;
+    height: 20px;
+    background: red;
+    display: inline-block;
+"></div>100% ocupación   </div>
     </body>
 </html>
