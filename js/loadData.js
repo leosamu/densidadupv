@@ -195,12 +195,11 @@ function setNode(geohash,edificio,planta,size,color,fillcolor){
 }
    
 function crearSlider(mymap){
-    var slider = document.getElementById("miFiltro");   
-    var today = new Date(); 
+    var slider = document.getElementById("miFiltro");       
     if  (typeof hora != 'undefined') 
         {   
             slider.value = parseInt(hora.split(":")[0])*12+Math.round(parseInt(hora.split(":")[1])/5)
-            $("#personascelda")[0].innerText="Personas por celda de 100 metros cuadrados a las " + hora + " el día " + today.getDate() + "-"+ today.getMonth()+ "-" + today.getFullYear();
+            $("#personascelda")[0].innerText="Personas por celda de 100 metros cuadrados a las " + hora + " el día " + fecha_datos;
         }
     // Update the current slider value (each time you drag the slider handle)
     slider.oninput = function() {    
@@ -211,7 +210,7 @@ function crearSlider(mymap){
     momento.setMinutes(minutos);    
        
     //el slider da valores numéricos de 1 a 288 que son los rangos de 5 en 5 minutos
-    $("#personascelda")[0].innerText="Personas por celda de 100 metros cuadrados a las " + momento.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + " el día " + today.getDate() + "-"+ today.getMonth()+ "-" + today.getFullYear();
+    $("#personascelda")[0].innerText="Personas por celda de 100 metros cuadrados a las " + momento.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + " el día " + fecha_datos;
     loadMap(datos,momento.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
     /*
     var hidden = L.latLng(1000,1000);
