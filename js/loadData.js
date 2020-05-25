@@ -191,7 +191,7 @@ function setNode(geohash,edificio,planta,size,color,fillcolor){
         fillColor: fillcolor,
         fillOpacity: 0.5,
         radius: size/5
-    }).bindPopup("Ed. " + edificio + " Planta" + planta );
+    }).bindPopup("Ed. " + edificio + " Planta " + planta );
 }
    
 function crearSlider(mymap){
