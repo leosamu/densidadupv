@@ -144,7 +144,7 @@ function loadMap(datos,hora){
             {
                 //si ya tenemos la planta agregamos el nodo
                 //key es el % de ocupacion                            
-                nodo = setNode(datoshora[key][datonodo]["geohash"],datoshora[key][datonodo]["planta"],parseInt(key.replace("d","")),pintar[key]['color'],pintar[key]['fillcolor']);
+                nodo = setNode(datoshora[key][datonodo]["geohash"],datoshora[key][datonodo]["edificio"],datoshora[key][datonodo]["planta"],parseInt(key.replace("d","")),pintar[key]['color'],pintar[key]['fillcolor']);
                 pintar[key]['nodos'].push(nodo);
             }             
             }
@@ -185,13 +185,13 @@ function loadMap(datos,hora){
         }                        
 }
 
-function setNode(geohash,planta,size,color,fillcolor){
+function setNode(geohash,edificio,planta,size,color,fillcolor){
     return L.circle(decodeGeoHash(geohash),{
         color: color,
         fillColor: fillcolor,
         fillOpacity: 0.5,
         radius: size/5
-    }).bindPopup("Planta :"+ planta);
+    }).bindPopup("Ed. " + edificio + " Planta" + planta );
 }
    
 function crearSlider(mymap){
@@ -208,8 +208,9 @@ function crearSlider(mymap){
     var momento = new Date();
     momento.setHours(horas);
     momento.setMinutes(minutos);    
+    var today = new Date();    
     //el slider da valores numéricos de 1 a 288 que son los rangos de 5 en 5 minutos
-    $("#personascelda")[0].innerText="Personas por celda de 100 metros cuadrados a las " + momento.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    $("#personascelda")[0].innerText="Personas por celda de 100 metros cuadrados a las " + momento.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + " el día " + today.getDate() + "-"+ f.getMonth()+ "-" +f.getFullYear();
     loadMap(datos,momento.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
     /*
     var hidden = L.latLng(1000,1000);
